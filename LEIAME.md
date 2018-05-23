@@ -1,37 +1,22 @@
 Ethereum playground
 ==========
 
-This works is based on the official "ethereum/go-client" docker image, without modifications. A few scripts in this project simplify playing with this image.
+Esta imagem é derivada (indiretamente) da imagem oficial "ethereum/go-client", mas ligeiramente modificada para aceitar argumentos que simplifiquem a criação de uma rede Ethereum privada com múltiplos nós. Esta imagem está publicada no Docker Hub como "vertigo/ethereum".
 
-## Quick start
+Alguns scripts no projeto agilizam o uso desta imagem ou mesmo permitem sua construção local. Há um artigo publicado que descreve com mais acuidade estes passos.
 
-Assuming you have Docker up and running:
+## Definição de Rede Ethereum Privada
 
-* Run a bootnode
-* Run a common node
-* Run a miner node
-* Check a node's peers
+Para isolar uma rede blockchain Ethereum das redes públicas conhecidas não é necessário de forma alguma construir uma rede isolada. Os nós de uma rede privada podem ainda residir na Internet mas, pela natureza do próprio blockchain, estarão implementado uma rede fechada e privada, composta apenas por nós que compartilhem o mesmo bloco gênese. 
 
-```sh
-./bootnode.sh
-./runnode.sh
-./runminer.sh
-./showpeers.sh
-```
+Com esta imagem - e scripts associados - o usuário pode fornecer argumentos que irão gerar um bloco gênese previsível, criando um nói em um container Docker de um mesmo blockchain Ethereum privado em qualquer host na Internet (ou rede local, ou mesmo em localhost).
 
-## Network definition
-
-To isolate your private Ethereum network from the main public one it does not require an isolated physical network at all. Its nodes can still reside on the Internet and yet implement a closed private Ethereum network.
-
-This 'genesis.sh' allows the user to define environment variables that will reflect on a particular (and predictable) genesis block, therefore creating an Ethereum network that cannot interact with another one. This is done when the script generates a 'genesis.json' file that is mounted on each node's container.
-
-Those variables are:
+As variáveis de ambiente passadas como argumentos pelos scripts aos containers são:
 
 * GEN_NONCE: any value your nodes agree upon, the default is "0xeddeadbabeeddead"
-* GEN_CHAIN_ID: any integer value your nodes agree upon, the default is 1981
-* GEN_ALLOC: pre-funded accounts
+* NET_ID: any integer value your nodes agree upon, the default is 1981
 
-The 'runnode.sh' scripts checks if the node database has already been initilized and runs 'geth init genesis.json' when needed. Similarly, the GEN_CHAIN_ID variable defines the "network_id" of the network. All members of the private network will use the same genesis file.
+The GEN_NONCE variable is used during the start script to create the "genesis.json" used when initializing the blockchain. Similarly, the NET_ID variable defines the "network_id" of the network. All members of the private network must have the same genesis block and network_id, so all you'll have to do is run the containers with the same "-e" arguments for these variables (the provided scripts do it).
 
 ## Bootnode
 
@@ -46,7 +31,7 @@ The `bootnode.sh` script runs a specialized bootnode container named "ethereum-b
 ```sh
 docker logs ethereum-bootnode
 ...
-INFO [12-05|02:30:08] UDP listener up      self=enode://c409a84245a91384a6743e800c4f45df31915d9c6a30c1352a4442d18e443b184107696231d714f3c3015f13263a416ec019d637fb567aea5455114f1cf161d2@[::]:30301
+I0908 14:46:45.899423 p2p/discover/udp.go:217] Listening, enode://52f4bf370b6f407a6b3bca149b2fe24fc54ce6ac19ffe0926ad41d9bfc86ccf9bd8703fa5a4961ab28bba2a81eacba183652f744d3ff02602ecb63b7ccd3643f@172.17.0.4:30301
 ```
 
 There is another useful script that parses the "enode" URL from this very same log (it is used in other scripts to find the bootnode URL automatically):
@@ -63,8 +48,8 @@ The provided utility scripts are meant for local development use and rely on loc
 The folders created bu each script are:
 
 * bootnode.sh: volume ".bootnode"
-* runnode.sh: volume ".ether-<node_name>" (ex: "./runnode node1" creates the volume ".ether-node1")
-* runminer.sh: volume ".ether-<miner_name>" (id.)
+* runnode.sh: volume ".ether-<nome do node>" (ex: "./runnode node1" creates the volume ".ether-node1")
+* runminer.sh: volume ".ether-<nome do miner>" (id.)
 
 Note: if ran without arguments the scripts `runnode.sh` and `runminer.sh` assume the argument "node1" and "miner1", respectively.
 
@@ -95,7 +80,7 @@ Self-discovery can take a few seconds, but it is easy to check it with the scrip
 An optional argument can specify another node container to be checked: 
 
 ```sh
-./showpeers.sh node2
+./showpeers.sh ethereum-node2
 ```
 
 ## Running a miner node
