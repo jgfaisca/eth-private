@@ -1,4 +1,4 @@
-Ethereum sandbox
+Ethereum sandbox for private networks
 ==========
 
 This works is based on the official "ethereum/go-client" docker image, without modifications. A few scripts in this project simplify playing with this image.
