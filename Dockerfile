@@ -1,5 +1,4 @@
-# Ethereum playground for private networks
-# Playground Ethereum para redes privadas
+# Ethereum sandbox for private networks
 
 # Why not the official image?
 # Until 1.7.2 the public image does NOT contain tools beyond geth,
@@ -8,7 +7,7 @@
 
 FROM ubuntu:latest
 
-LABEL maintainer="andre@vertigo.com.br"
+LABEL maintainer="jose.faisca@gmail.com"
 
 ARG GETH_URL=https://gethstore.blob.core.windows.net/builds/geth-alltools-linux-amd64-1.7.2-1db4ecdc.tar.gz
 ARG GETH_MD5=c17c164d2d59d3972a2e6ecf922d2093
