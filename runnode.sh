@@ -1,7 +1,10 @@
 #!/bin/bash
-IMGNAME="ethereum/client-go:v1.7.3"
+IMGNAME="ethereum/client-go:stable"
+#IMGNAME="ethereum/client-go:v1.7.3"
+ETH_NET_ID="3963"
 NODE_NAME=$1
 NODE_NAME=${NODE_NAME:-"node1"}
+#NODE_NET="--public" # comment to disable public node option
 DETACH_FLAG=${DETACH_FLAG:-"-d"}
 CONTAINER_NAME="ethereum-$NODE_NAME"
 DATA_ROOT=${DATA_ROOT:-"$(pwd)/.ether-$NODE_NAME"}
@@ -11,6 +14,10 @@ docker stop $CONTAINER_NAME
 docker rm $CONTAINER_NAME
 RPC_PORTMAP=
 RPC_ARG=
+PORT_ARG=
+NODE_PORT="30303"
+
+
 if [[ ! -z $RPC_PORT ]]; then
     RPC_ARG='--rpc --rpcaddr=0.0.0.0 --rpcapi=db,eth,net,web3,personal --rpccorsdomain "*"'
     RPC_PORTMAP="-p $RPC_PORT:8545"
@@ -28,6 +35,12 @@ if [ ! -d $DATA_ROOT/keystore ]; then
         $IMGNAME init /opt/genesis.json
     echo "...done!"
 fi
+
+# check public node option
+if [ "$NODE_NET" = "--public" ]; then
+    PORT_ARG="-p 0.0.0.0:$NODE_PORT:$NODE_PORT/tcp"
+fi
+
 echo "Running new container $CONTAINER_NAME..."
 docker run $DETACH_FLAG --name $CONTAINER_NAME \
     --network ethereum \
@@ -35,4 +48,5 @@ docker run $DETACH_FLAG --name $CONTAINER_NAME \
     -v $DATA_HASH:/root/.ethash \
     -v $(pwd)/genesis.json:/opt/genesis.json \
     $RPC_PORTMAP \
-    $IMGNAME --bootnodes=$BOOTNODE_URL $RPC_ARG --cache=512 --verbosity=4 --maxpeers=3 ${@:2}
+    $PORT_ARG \
+    $IMGNAME --bootnodes=$BOOTNODE_URL --networkid=$ETH_NET_ID $RPC_ARG --cache=512 --verbosity=4 --maxpeers=27 ${@:2}

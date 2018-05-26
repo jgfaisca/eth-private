@@ -1,0 +1,5 @@
+gen_alloc
+genesis.json
+.bootnode
+.ethash
+.ether-*
