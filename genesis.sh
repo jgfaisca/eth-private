@@ -1,6 +1,5 @@
 #!/bin/bash
-#GEN_NONCE="0xeddeadbabeeddead"
-#GEN_CHAIN_ID=1981
+
 #GEN_ALLOC='"0x0000000000000000000000000000000000000000": {"balance": "100000"}"
 
 FILE="genesis.json"
@@ -10,7 +9,7 @@ if [ -f $FILE ]; then
 fi
 
 GEN_NONCE="0x000000ba9004740c"
-GEN_CHAIN_ID=8102
+GEN_CHAIN_ID=333
 FILE="gen_alloc"
 if [ ! -f $FILE ]; then
    #echo "File $FILE does not exist."
