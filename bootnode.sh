@@ -6,9 +6,10 @@ docker stop ethereum-bootnode
 docker rm ethereum-bootnode
 IMGNAME="ethereum/client-go:alltools-stable"
 DATA_ROOT=${DATA_ROOT:-$(pwd)}
-#NODE_NET="--public" # comment to disable public bootnode option
+NODE_NET="--public" # comment to disable public bootnode option
 PORT_ARG=
-VERSION="-v5" # run a v5 topic discovery bootnode
+#VERSION="-v5disc" # run a v5 topic discovery bootnode
+VERSION=
 PORT="30301"  # listen port
 
 # generate bootnode key if needed
@@ -33,6 +34,6 @@ docker run -d --name ethereum-bootnode \
     -v $DATA_ROOT/.bootnode:/opt/bootnode \
     --network ethereum \
     $PORT_ARG \
-    $IMGNAME bootnode $VERSION -addr ":$PORT" --nodekey /opt/bootnode/boot.key --verbosity=3 "$@"
+    $IMGNAME bootnode $VERSION --nodekey /opt/bootnode/boot.key --verbosity=3 "$@"
 
 
