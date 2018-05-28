@@ -9,7 +9,7 @@ if [ -f $FILE ]; then
 fi
 
 GEN_NONCE="0x000000ba9004740c"
-GEN_CHAIN_ID=333
+GEN_CHAIN_ID=3963
 FILE="gen_alloc"
 if [ ! -f $FILE ]; then
    #echo "File $FILE does not exist."
