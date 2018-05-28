@@ -9,9 +9,6 @@ DETACH_FLAG=${DETACH_FLAG:-"-d"}
 CONTAINER_NAME="ethereum-$NODE_NAME"
 DATA_ROOT=${DATA_ROOT:-"$(pwd)/.ether-$NODE_NAME"}
 DATA_HASH=${DATA_HASH:-"$(pwd)/.ethash"}
-echo "Destroying old container $CONTAINER_NAME..."
-docker stop $CONTAINER_NAME
-docker rm $CONTAINER_NAME
 RPC_PORTMAP=
 RPC_ARG=
 PORT_ARG=
@@ -22,11 +19,14 @@ if [[ ! -z $RPC_PORT ]]; then
     RPC_ARG='--rpc --rpcaddr=0.0.0.0 --rpcapi=db,eth,net,web3,personal --rpccorsdomain "*"'
     RPC_PORTMAP="-p $RPC_PORT:8545"
 fi
+
 BOOTNODE_URL=${BOOTNODE_URL:-$(./getbootnodeurl.sh)}
+
 if [ ! -f $(pwd)/genesis.json ]; then
     echo "No genesis.json file found, please run 'genesis.sh'. Aborting."
-    exit
+    exit 1
 fi
+
 if [ ! -d $DATA_ROOT/keystore ]; then
     echo "$DATA_ROOT/keystore not found, running 'geth init'..."
     docker run --rm \
@@ -40,6 +40,10 @@ fi
 if [ "$NODE_NET" = "--public" ]; then
     PORT_ARG="-p 0.0.0.0:$NODE_PORT:$NODE_PORT/tcp -p 0.0.0.0:$NODE_PORT:$NODE_PORT/udp"
 fi
+
+echo "Destroying old container $CONTAINER_NAME..."
+docker stop $CONTAINER_NAME
+docker rm $CONTAINER_NAME
 
 echo "Running new container $CONTAINER_NAME..."
 docker run $DETACH_FLAG --name $CONTAINER_NAME \
