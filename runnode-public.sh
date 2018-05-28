@@ -26,6 +26,20 @@ if [ "$BOOTNODE_URL" = "null" ]; then
     exit 1
 fi
 
+if [ ! -f $(pwd)/genesis.json ]; then
+    echo "No genesis.json file found, please run 'genesis.sh'. Aborting."
+    exit
+fi
+
+if [ ! -d $DATA_ROOT/keystore ]; then
+    echo "$DATA_ROOT/keystore not found, running 'geth init'..."
+    docker run --rm \
+        -v $DATA_ROOT:/root/.ethereum \
+        -v $(pwd)/genesis.json:/opt/genesis.json \
+        $IMGNAME init /opt/genesis.json
+    echo "...done!"
+fi
+
 # check public node option
 if [ "$NODE_NET" = "--public" ]; then
     PORT_ARG="-p 0.0.0.0:$NODE_PORT:$NODE_PORT/tcp -p 0.0.0.0:$NODE_PORT:$NODE_PORT/udp"
@@ -39,6 +53,7 @@ echo "Running new container $CONTAINER_NAME..."
 docker run $DETACH_FLAG --name $CONTAINER_NAME \
     -v $DATA_ROOT:/root/.ethereum \
     -v $DATA_HASH:/root/.ethash \
+    -v $(pwd)/genesis.json:/opt/genesis.json \
     $RPC_PORTMAP \
     $PORT_ARG \
     $IMGNAME --bootnodes=$BOOTNODE_URL --networkid $ETH_NET_ID $RPC_ARG --cache=512 --verbosity=4 --maxpeers=27 ${@:2}
