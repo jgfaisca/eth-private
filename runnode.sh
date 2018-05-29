@@ -1,6 +1,7 @@
 #!/bin/bash
+#
+
 IMGNAME="ethereum/client-go:stable"
-#IMGNAME="ethereum/client-go:v1.7.3"
 ETH_NET_ID="3963"
 NODE_NAME=$1
 NODE_NAME=${NODE_NAME:-"node1"}
@@ -15,13 +16,12 @@ RPC_ARG=
 PORT_ARG=
 NODE_PORT="39603"
 
-
 if [[ ! -z $RPC_PORT ]]; then
     RPC_ARG='--rpc --rpcaddr=0.0.0.0 --rpcapi=db,eth,net,web3,personal --rpccorsdomain "*"'
     RPC_PORTMAP="-p $RPC_PORT:8545"
 fi
 
-BOOTNODE_URL=${BOOTNODE_URL:-$(./getbootnodeurl.sh)}
+BOOTNODE_URL=${BOOTNODE_URL:-$(./getnodeurl.sh bootnode)}
 
 if [ ! -f $(pwd)/genesis.json ]; then
     echo "No genesis.json file found, please run 'genesis.sh'. Aborting."
@@ -51,7 +51,6 @@ docker run $DETACH_FLAG --name $CONTAINER_NAME \
     --network ethereum \
     -v $DATA_ROOT:/root/.ethereum \
     -v $DATA_HASH:/root/.ethash \
-    -v $(pwd)/genesis.json:/opt/genesis.json \
     $RPC_PORTMAP \
     $PORT_ARG \
     $IMGNAME --bootnodes=$BOOTNODE_URL --networkid=$ETH_NET_ID $RPC_ARG --cache=512 --verbosity=4 --maxpeers=4 ${@:2}

@@ -3,9 +3,7 @@
 # Runs a bootnode with ethereum official "alltools" image.
 #
 
-#IMGNAME="ethereum/client-go:alltools-stable"
 IMGNAME="ethereum/client-go:alltools-v1.7.3"
-#IMGNAME="ethereum/client-go:v1.7.3"
 DATA_ROOT=${DATA_ROOT:-$(pwd)}
 #NODE_NET="--public" # comment to disable public bootnode option
 NODE_NET="--private"

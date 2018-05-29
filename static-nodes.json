@@ -1,5 +1,4 @@
 [
-	"enode://pubkey1@ip:port",
-      	"enode://pubkey2@ip:port",
-	"enode://pubkey3@ip:port"
+	"enode://58e3ab8e223d1c20d65ef78dc138b402ddfe7641fd03fef9b2978dedc6928a2a67b159a1da1c1e339bce7c1f4ba9f9ce5e3c8d179b37fdc32472e2be2e1b3ea9@81.90.60.209:39603",
+	"enode://eddeaee626e63533b6447ed6435db1e7ba28e510c60d84fa8d6a5ee6e6a4ed31b230f1449d4c2312d513dae38c0f6604cf4d68a6649979ecc0b83a0d50a28456@81.90.60.210:39603"
 ]

@@ -1,6 +1,5 @@
 #!/bin/bash
 IMGNAME="ethereum/client-go:stable"
-#IMGNAME="ethereum/client-go:v1.7.3"
 ETH_NET_ID="3963"
 NODE_NAME=$1
 NODE_NAME=${NODE_NAME:-"node1"}
@@ -23,13 +22,19 @@ fi
 
 # check BOOTNODE_URL variable
 if [ "$BOOTNODE_URL" = "null" ]; then
-    echo "Usage: BOOTNODE_URL=enode://...@ip_address:port $(echo "$0")"
-    exit 1
+  if [ ! -f $(pwd)/static-nodes.json ]; then
+    	echo "No static-nodes.json file found, please add file or run:"
+	echo "BOOTNODE_URL=enode://pubkey@ip:port $(echo "$0")"
+    	exit 1
+  fi
+	STATIC_NODES_ARG="-v $(pwd)/static-nodes.json:/root/.ethereum/static-nodes.json"
+else
+  	STATIC_NODES_ARG=""
 fi
 
 if [ ! -f $(pwd)/genesis.json ]; then
-    echo "No genesis.json file found, please run 'genesis.sh'. Aborting."
-    exit
+    echo "No genesis.json file found. Aborting."
+    exit 1
 fi
 
 if [ ! -d $DATA_ROOT/keystore ]; then
@@ -43,7 +48,8 @@ fi
 
 # check public node option
 if [ "$NODE_NET" = "--public" ]; then
-    PORT_ARG="-p 0.0.0.0:$NODE_PORT:30303/tcp -p 0.0.0.0:$NODE_PORT:$30303/udp"
+    #PORT_ARG="-p 0.0.0.0:$NODE_PORT:30303/tcp -p 0.0.0.0$NODE_PORT:30303/udp"
+    PORT_ARG="-p 0.0.0.0:$NODE_PORT:30303/tcp"
 fi
 
 echo "Destroying old container $CONTAINER_NAME..."
@@ -54,7 +60,7 @@ echo "Running new container $CONTAINER_NAME..."
 docker run $DETACH_FLAG --name $CONTAINER_NAME \
     -v $DATA_ROOT:/root/.ethereum \
     -v $DATA_HASH:/root/.ethash \
-    -v $(pwd)/genesis.json:/opt/genesis.json \
+    $STATIC_NODES_ARG \
     $RPC_PORTMAP \
     $PORT_ARG \
     $IMGNAME --bootnodes=$BOOTNODE_URL --networkid $ETH_NET_ID $RPC_ARG --cache=512 --verbosity=4 --maxpeers=12 ${@:2}
