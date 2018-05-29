@@ -1,5 +1,7 @@
 gen_alloc
+static-nodes.json
 genesis.json
 .bootnode
 .ethash
 .ether-*
+
