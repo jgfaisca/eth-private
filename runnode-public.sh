@@ -5,6 +5,7 @@ ETH_NET_ID="3963"
 NODE_NAME=$1
 NODE_NAME=${NODE_NAME:-"node1"}
 NODE_NET="--public" # comment to disable public node option
+#NODE_NET="--private"
 DETACH_FLAG=${DETACH_FLAG:-"-d"}
 CONTAINER_NAME="ethereum-$NODE_NAME"
 DATA_ROOT=${DATA_ROOT:-"$(pwd)/.ether-$NODE_NAME"}
@@ -42,7 +43,7 @@ fi
 
 # check public node option
 if [ "$NODE_NET" = "--public" ]; then
-    PORT_ARG="-p 0.0.0.0:$NODE_PORT:$NODE_PORT/tcp -p 0.0.0.0:$NODE_PORT:$NODE_PORT/udp"
+    PORT_ARG="-p 0.0.0.0:$NODE_PORT:30303/tcp -p 0.0.0.0:$NODE_PORT:$30303/udp"
 fi
 
 echo "Destroying old container $CONTAINER_NAME..."
@@ -56,4 +57,4 @@ docker run $DETACH_FLAG --name $CONTAINER_NAME \
     -v $(pwd)/genesis.json:/opt/genesis.json \
     $RPC_PORTMAP \
     $PORT_ARG \
-    $IMGNAME --bootnodes=$BOOTNODE_URL --networkid $ETH_NET_ID $RPC_ARG --port $NODE_PORT --cache=512 --verbosity=4 --maxpeers=27 ${@:2}
+    $IMGNAME --bootnodes=$BOOTNODE_URL --networkid $ETH_NET_ID $RPC_ARG --cache=512 --verbosity=4 --maxpeers=12 ${@:2}
