@@ -39,7 +39,8 @@ fi
 
 # check public node option
 if [ "$NODE_NET" = "--public" ]; then
-    PORT_ARG="-p 0.0.0.0:$NODE_PORT:30303/tcp -p 0.0.0.0:$NODE_PORT:$30303/udp"
+    #PORT_ARG="-p 0.0.0.0:$NODE_PORT:30303/tcp -p 0.0.0.0:$NODE_PORT:$30303/udp"
+    PORT_ARG="-p 0.0.0.0:$NODE_PORT:30303/tcp"
 fi
 
 echo "Destroying old container $CONTAINER_NAME..."
