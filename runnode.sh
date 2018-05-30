@@ -5,8 +5,8 @@ IMGNAME="ethereum/client-go:stable"
 ETH_NET_ID="3963"
 NODE_NAME=$1
 NODE_NAME=${NODE_NAME:-"node1"}
-#NODE_NET="--public" # comment to disable public node option
-NODE_NET="--private"
+NODE_NET="--public" # comment to disable public node option
+#NODE_NET="--private"
 DETACH_FLAG=${DETACH_FLAG:-"-d"}
 CONTAINER_NAME="ethereum-$NODE_NAME"
 DATA_ROOT=${DATA_ROOT:-"$(pwd)/.ether-$NODE_NAME"}
@@ -54,4 +54,4 @@ docker run $DETACH_FLAG --name $CONTAINER_NAME \
     -v $DATA_HASH:/root/.ethash \
     $RPC_PORTMAP \
     $PORT_ARG \
-    $IMGNAME --bootnodes=$BOOTNODE_URL --networkid=$ETH_NET_ID $RPC_ARG --cache=512 --verbosity=4 --maxpeers=4 ${@:2}
+    $IMGNAME --bootnodes=$BOOTNODE_URL --networkid=$ETH_NET_ID $RPC_ARG --cache=512 --verbosity=4 --maxpeers=24 ${@:2}

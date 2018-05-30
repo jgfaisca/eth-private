@@ -3,7 +3,7 @@
   "engine": {
     "Ethash": {
       "params": {
-        "gasLimitBoundDivisor": "0x400",
+	"gasLimitBoundDivisor": "0x400",
         "minimumDifficulty": "0x20000",
         "difficultyBoundDivisor": "0x800",
         "durationLimit": "0xd",
@@ -23,7 +23,8 @@
     "maximumExtraDataSize": "0x20",
     "minGasLimit": "0x1388",
     "networkID": 3963,
-    "eip98Transition": 9223372036854775807
+    "eip98Transition": 9223372036854775807,
+    "gasLimitBoundDivisor": "0x400"
   },
   "genesis": {
     "seal": {

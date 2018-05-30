@@ -63,4 +63,4 @@ docker run $DETACH_FLAG --name $CONTAINER_NAME \
     $STATIC_NODES_ARG \
     $RPC_PORTMAP \
     $PORT_ARG \
-    $IMGNAME --bootnodes=$BOOTNODE_URL --networkid $ETH_NET_ID $RPC_ARG --cache=512 --verbosity=4 --maxpeers=12 ${@:2}
+    $IMGNAME --bootnodes=$BOOTNODE_URL --networkid $ETH_NET_ID $RPC_ARG --cache=512 --verbosity=4 --maxpeers=24 ${@:2}
