@@ -4,4 +4,4 @@ genesis.json
 .bootnode
 .ethash
 .ether-*
-
+*.service

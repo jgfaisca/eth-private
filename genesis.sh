@@ -4,16 +4,20 @@
 
 FILE="genesis.json"
 if [ -f $FILE ]; then
-   echo "File $FILE exists."
+   echo "File $FILE exists. Aborting..."
    exit 1
+else
+   echo "File $FILE does not exist. Creating..."
 fi
 
-GEN_NONCE="0x000000ba9004740c"
+GEN_NONCE="0x0000000000000042"
 GEN_CHAIN_ID=3963
 FILE="gen_alloc"
 if [ ! -f $FILE ]; then
-   #echo "File $FILE does not exist."
+   echo "File $FILE does not exist. Creating..."
    cp src/$FILE.template $FILE
+else
+   echo "File $FILE exists."
 fi
 
 GEN_ALLOC=$(cat $FILE)
