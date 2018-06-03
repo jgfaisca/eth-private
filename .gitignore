@@ -1,6 +1,7 @@
 gen_alloc
 static-nodes.json
 genesis.json
+parity-genesis.json
 .bootnode
 .ethash
 .ether-*
